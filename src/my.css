@@ -1,0 +1,42 @@
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #38bdf8;
+    --accent-light: #7dd3fc;
+    --border: rgba(148, 163, 184, 0.1);
+    --success: #4ade80;
+    --error: #f87171;
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --gradient: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(212, 100%, 56%, 0.1) 0px, transparent 50%);
+}
+
+.bg-custom {
+    background: #1e293b;
+}
+
+.mc-font {
+    font-family: 'Minecraft', sans-serif;
+}
+
+.font-panton {
+    font-family: 'Panton', sans-serif;
+    font-family: 'Panton Narrow', sans-serif;
+}

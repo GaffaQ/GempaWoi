@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GempaBro - Informasi Gempa Terkini</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js"></script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animate-fade-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+        .delay-400 {
+            animation-delay: 400ms;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #3B82F6, #ffffff, #FCD34D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        #shakemap-image {
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+        }
+
+        #shakemap-container {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col animate-fade-in">
+    <div class="container mx-auto px-6 lg:px-8 py-8 flex-grow max-w-7xl">
+        <!-- Header -->
+        <header class="text-center mb-12 animate-fade-up">
+            <h1 class="text-5xl font-bold text-gradient">GempaWoi</h1>
+            <p class="mt-2 text-gray-400">Lari woi ada gempa wkwk 😹</p>
+        </header>
+
+        <!-- Main Content Flex Container -->
+        <div class="flex flex-col lg:flex-row gap-8 mx-auto">
+            <!-- Main Card - Fixed width pada desktop -->
+            <div class="lg:w-[460px] lg:flex-shrink-0 animate-fade-up delay-100">
+                <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl p-5 border border-gray-700/50">
+                    <div class="flex items-center gap-3 mb-6">
+                        <h2 class="text-2xl font-bold text-blue-400">Gempa Terkini</h2>
+                        <div class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                            <span class="text-blue-400 text-sm font-medium skeleton-text" id="latest-datetime">-</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Map Section -->
+                        <div class="bg-gray-900/50 rounded-lg p-4 border border-gray-700/30">
+                            <div id="shakemap-container" class="bg-gray-800/50 rounded-lg flex items-center justify-center border border-gray-700/30">
+                                <div id="shakemap-image"></div>
+                                <span id="shakemap-placeholder" class="text-gray-400">Memuat peta...</span>
+                    </div>
+                        </div>
+
+                        <!-- Info Section -->
+                        <div class="space-y-5">
+                            <!-- Magnitude & Region -->
+                            <div class="space-y-3">
+                                <div class="flex items-baseline gap-3">
+                                    <span class="text-4xl font-bold text-yellow-500 skeleton-text" id="latest-magnitude">-</span>
+                                    <span class="text-yellow-500/70 text-lg">SR</span>
+                        </div>
+                                <div class="text-xl font-medium skeleton-text" id="latest-region">-</div>
+                    </div>
+
+                            <!-- Details Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Lintang -->
+                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                    <div class="text-gray-400 text-sm mb-1">Lintang</div>
+                                    <div class="font-medium skeleton-text" id="latest-latitude">-</div>
+                        </div>
+
+                                <!-- Bujur -->
+                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                    <div class="text-gray-400 text-sm mb-1">Bujur</div>
+                                    <div class="font-medium skeleton-text" id="latest-longitude">-</div>
+                    </div>
+
+                                <!-- Koordinat dan Kedalaman dalam satu baris -->
+                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                    <div class="text-gray-400 text-sm mb-1">Koordinat</div>
+                                    <div class="font-medium skeleton-text" id="latest-coordinates">-</div>
+                </div>
+
+                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                    <div class="text-gray-400 text-sm mb-1">Kedalaman</div>
+                                    <div class="font-medium skeleton-text" id="latest-depth">-</div>
+            </div>
+        </div>
+
+                            <!-- Impact Info -->
+                            <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                <div class="text-gray-400 text-sm mb-1">Potensi Dampak</div>
+                                <div class="font-medium" id="earthquake-impact">-</div>
+                    </div>
+
+                            <!-- Felt Info -->
+                            <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/30">
+                                <div class="text-gray-400 text-sm mb-1">Dirasakan</div>
+                                <div class="font-medium" id="felt-info">-</div>
+                    </div>
+
+                            <!-- Realtime Update Info -->
+                            <div class="bg-blue-500/5 rounded-lg p-3 border border-blue-500/10">
+                                <div class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-sm text-blue-400">Data ini akan di update otomatis secara realtime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Recent Earthquakes Section -->
+            <div class="flex-grow max-w-4xl animate-fade-up delay-200">
+                <!-- Section Header dengan Border dan Tombol Refresh -->
+                <div class="mb-6 border-b border-gray-700/50 pb-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-300">Riwayat Gempa Terakhir</h3>
+                        <button onclick="refreshData()" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span class="text-sm font-medium">Segarkan</span>
+                </button>
+            </div>
+        </div>
+                <div id="recent-earthquakes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Kartu-kartu gempa akan ditambahkan secara dinamis oleh JavaScript -->
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 border-t border-gray-800/50 animate-fade-up delay-300">
+        <div class="container mx-auto px-6 lg:px-8">
+            <div class="flex flex-col items-center gap-3">
+                <span class="text-sm text-gray-400"><span class="text-yellow-400 font-medium">GempaWoi</span> Dibuat oleh <span class="text-blue-400 font-medium">Gaffa</span></span>
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com/gaffaaq" target="_blank" rel="noopener noreferrer" 
+                       class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/GaffaQ" target="_blank" rel="noopener noreferrer" 
+                       class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
